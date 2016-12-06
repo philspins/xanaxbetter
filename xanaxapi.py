@@ -8,7 +8,7 @@ import mechanize
 import HTMLParser
 from cStringIO import StringIO
 
-from _constants import __site_url__
+from _constants import __site_url__, __torrent_url__
 
 headers = {
     'Connection': 'keep-alive',
@@ -78,7 +78,7 @@ class XanaxAPI:
         self.authkey = None
         self.passkey = None
         self.userid = None
-        self.tracker = __site_url__ + ":2095/"
+        self.tracker = __torrent_url__ + "/"
         self.last_request = time.time()
         self.rate_limit = 2.0 # seconds between requests
         self._login()
