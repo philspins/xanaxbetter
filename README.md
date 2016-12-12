@@ -23,11 +23,34 @@ mutagen, and requests. Try this:
 
     $ pip install -r requirements.txt
 
-	
 If you are on a seedbox, or a system without root priviliages, try this:
 
-
     $ pip install --user -r requirements.txt
+
+Some seedbox providers (such as seedhost.eu) will not work properly with `--user` as
+they have the system packages overriding the local ones (especially if you're using 
+`requests[security]`). You'll need to create a 
+[virtualenv](https://virtualenv.pypa.io/en/stable/) to use it. This can be accomplished
+as:
+
+    $ pip install --user virtualenv
+    $ cd ~/
+    $ ~/.local/bin/virtualenv apollo-venv
+
+Then anytime you need to use xanaxbetter, you just need to run this first:
+
+    $ source ~/apollo-venv/bin/activate
+
+You should now see (apollo-venv) at the beginning of your terminal prompt. You should now
+install the requirements as normal.
+
+Please note, that if you're on an older version of python 2.7 (such as 2.7.6), you
+either must update your python installation or you can do:
+
+    $ pip install requests[security]
+
+Please note, this does require the installation of some additional system packages
+that you may need to install (`python-dev`, `libffi-dev`, and `libssl-dev` on Ubuntu).
 
 
 Alternatively, if you have setuptools installed, you can do this (in the
@@ -44,7 +67,10 @@ depending on your operating system, but if you're using something like
 Ubuntu you can do this:
 
     # aptitude install mktorrent flac lame sox
-	
+
+On Mac using [homebrew](https://homebrew.sh):
+
+    $ brew install mktorrent flac lame sox    
 
 If you are on a seedbox and you lack the privilages to install packages,
 you could contact your provider to have these packages installed.
@@ -54,13 +80,13 @@ At this point you may execute the following command:
     $ xanaxbetter
 
 And you will receive a notification stating that you should edit the
-configuration file \~/.xanaxbetter/config (if you're lucky).
+configuration file `~/.xanaxbetter/config` (if you're lucky).
 
 Configuration
 -------------
 
 You've made it far! Congratulations. Open up the file
-\~/.xanaxbetter/config in a text editor. You're going to see something
+`~/.xanaxbetter/config` in a text editor. You're going to see something
 like this:
 
     [xanax]
@@ -73,18 +99,20 @@ like this:
     media = sacd, soundboard, web, dvd, cd, dat, vinyl, blu-ray
     24bit_behaviour = 0
 
-`username` and `password` are your Apollo.Rip login credentials. 
-`data_dir` is the directory where your downloads are stored. 
+`username` and `password` are your Apollo.Rip login credentials. Note,
+if either contain a `%`, you need to put an additional `%` before it 
+(so if your password was `a%b`, you need to type `a%%b`).  
+`data_dir` is the directory where your downloads are stored.  
 `output_dir` is the directory where your transcodes will be created. If
-the value is blank, `data_dir` will be used.
+the value is blank, `data_dir` will be used.  
 `torrent_dir` is the directory where torrents should be created (e.g.,
 your watch directory). `formats` is a list of formats that you'd like to
 support (so if you don't want to upload V2, just remove it from this
-list).
+list).  
 `media` is a list of lossless media types you want to consider for
 transcoding. The default value is all Apollo.Rip lossless formats, but if
 you want to transcode only CD and vinyl media, for example, you would
-set this to 'cd, vinyl'.
+set this to 'cd, vinyl'.  
 `24bit_behaviour` defines what happens when the program encounters a FLAC 
 that it thinks is 24bits. If it is set to '2', every FLAC that has a bits-
 per-sample property of 24 will be silently re-categorized. If it set to '1',
@@ -107,19 +135,28 @@ Alright! Now you're ready to use xanaxbetter.
 Usage
 -----
 
-    usage: xanaxbetter [-h] [-s] [--config CONFIG] [--cache CACHE]
-                      [release_urls [release_urls ...]]
-
+    usage: xanaxbetter [-h] [-s] [-j THREADS] [--config CONFIG] [--cache CACHE]
+                       [-U] [-E] [--version]
+                       [release_urls [release_urls ...]]
+    
     positional arguments:
-      release_urls     the URL where the release is located
-
+      release_urls          the URL where the release is located (default: None)
+    
     optional arguments:
-      -h, --help       show this help message and exit
-      -s, --single     only add one format per release (useful for getting unique
-                       groups)
-      --config CONFIG  the location of the configuration file (default:
-                       ~/.xanaxbetter/config)
-      --cache CACHE    the location of the cache (default: ~/.xanaxbetter/cache)
+      -h, --help            show this help message and exit
+      -s, --single          only add one format per release (useful for getting
+                            unique groups) (default: False)
+      -j THREADS, --threads THREADS
+                            number of threads to use when transcoding (default: 3)
+      --config CONFIG       the location of the configuration file (default:
+                            /Users/mpeveler/.xanaxbetter/config)
+      --cache CACHE         the location of the cache (default:
+                            /Users/mpeveler/.xanaxbetter/cache)
+      -U, --no-upload       don't upload new torrents (in case you want to do it
+                            manually) (default: False)
+      -E, --no-24bit-edit   don't try to edit 24-bit torrents mistakenly labeled
+                            as 16-bit (default: False)
+      --version             show program's version number and exit
 
 Examples
 --------
@@ -132,7 +169,7 @@ take a while):
 To transcode and upload a specific release (provided you have already
 downloaded the FLAC and it is located in your `data_dir`):
 
-    $ xanaxbetters http://apollo.rip/torrents.php?id=1000\&torrentid=1000000
+    $ xanaxbetter "http://apollo.rip/torrents.php?id=1000&torrentid=1000000"
 
 Note that if you specify a particular release(s), xanaxbetter will
 ignore your configuration's media types and attempt to transcode the
