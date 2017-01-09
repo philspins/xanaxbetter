@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 import re
 import os
 import json
@@ -50,7 +50,7 @@ formats = {
         'encoding' : '320'
     },
     'V2': {
-        'format' : 'MP3', 
+        'format' : 'MP3',
         'encoding' : 'V2 (VBR)'
     },
 }
@@ -129,7 +129,7 @@ class XanaxAPI:
         r = self.session.get(ajaxpage, params=kwargs, allow_redirects=False)
         self.last_request = time.time()
         return r.content
-    
+
     def get_artist(self, id=None, format='MP3', best_seeded=True):
         res = self.request('artist', id=id)
         torrentgroups = res['torrentgroup']

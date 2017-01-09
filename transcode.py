@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 import errno
 import multiprocessing
 import os
@@ -29,7 +29,7 @@ class TranscodeDownmixException(TranscodeException):
 
 class UnknownSampleRateException(TranscodeException):
     pass
-    
+
 # In most Unix shells, pipelines only report the return code of the
 # last process. We need to know if any process in the transcode
 # pipeline fails, not just the last one.
