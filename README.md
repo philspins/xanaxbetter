@@ -28,8 +28,8 @@ If you are on a seedbox, or a system without root priviliages, try this:
     $ pip install --user -r requirements.txt
 
 Some seedbox providers (such as seedhost.eu) will not work properly with `--user` as
-they have the system packages overriding the local ones (especially if you're using 
-`requests[security]`). You'll need to create a 
+they have the system packages overriding the local ones (especially if you're using
+`requests[security]`). You'll need to create a
 [virtualenv](https://virtualenv.pypa.io/en/stable/) to use it. This can be accomplished
 as:
 
@@ -70,7 +70,7 @@ Ubuntu you can do this:
 
 On Mac using [homebrew](https://homebrew.sh):
 
-    $ brew install mktorrent flac lame sox    
+    $ brew install mktorrent flac lame sox
 
 If you are on a seedbox and you lack the privilages to install packages,
 you could contact your provider to have these packages installed.
@@ -91,7 +91,7 @@ like this:
 
     [xanax]
     username =
-    password = 
+    password =
     data_dir =
     output_dir =
     torrent_dir =
@@ -100,20 +100,20 @@ like this:
     24bit_behaviour = 0
 
 `username` and `password` are your Apollo.Rip login credentials. Note,
-if either contain a `%`, you need to put an additional `%` before it 
-(so if your password was `a%b`, you need to type `a%%b`).  
-`data_dir` is the directory where your downloads are stored.  
+if either contain a `%`, you need to put an additional `%` before it
+(so if your password was `a%b`, you need to type `a%%b`).
+`data_dir` is the directory where your downloads are stored.
 `output_dir` is the directory where your transcodes will be created. If
-the value is blank, `data_dir` will be used.  
+the value is blank, `data_dir` will be used.
 `torrent_dir` is the directory where torrents should be created (e.g.,
 your watch directory). `formats` is a list of formats that you'd like to
 support (so if you don't want to upload V2, just remove it from this
-list).  
+list).
 `media` is a list of lossless media types you want to consider for
 transcoding. The default value is all Apollo.Rip lossless formats, but if
 you want to transcode only CD and vinyl media, for example, you would
-set this to 'cd, vinyl'.  
-`24bit_behaviour` defines what happens when the program encounters a FLAC 
+set this to 'cd, vinyl'.
+`24bit_behaviour` defines what happens when the program encounters a FLAC
 that it thinks is 24bits. If it is set to '2', every FLAC that has a bits-
 per-sample property of 24 will be silently re-categorized. If it set to '1',
 a prompt will appear. The default is '0' which ignores these occurrences.
@@ -138,10 +138,10 @@ Usage
     usage: xanaxbetter [-h] [-s] [-j THREADS] [--config CONFIG] [--cache CACHE]
                        [-U] [-E] [--version]
                        [release_urls [release_urls ...]]
-    
+
     positional arguments:
       release_urls          the URL where the release is located (default: None)
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -s, --single          only add one format per release (useful for getting
@@ -153,8 +153,10 @@ Usage
       --cache CACHE         the location of the cache (default:
                             /Users/mpeveler/.xanaxbetter/cache)
       -U, --no-upload       don't upload new torrents (in case you want to do it
-                            manually) (default: False)
       -E, --no-24bit-edit   don't try to edit 24-bit torrents mistakenly labeled
+      -C, --check-dir       check/verify (eventually edit) transcode directory
+                            name before creation (default: False)
+                            manually) (default: False)
                             as 16-bit (default: False)
       --version             show program's version number and exit
 
