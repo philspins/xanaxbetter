@@ -9,6 +9,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import readline
 
 import mutagen.flac
 
@@ -246,7 +247,7 @@ def get_transcode_dir(flac_dir, output_dir, output_format, resample):
 
     return os.path.join(output_dir, transcode_dir)
 
-def transcode_release(flac_dir, output_dir, output_format, max_threads=None):
+def transcode_release(flac_dir, output_dir, output_format, check_dir=False, max_threads=None):
     '''
     Transcode a FLAC release into another format.
     '''
@@ -272,6 +273,15 @@ def transcode_release(flac_dir, output_dir, output_format, max_threads=None):
     # transcode. Do not change this assumption without considering the
     # consequences!
     transcode_dir = get_transcode_dir(flac_dir, output_dir, output_format, resample)
+    if check_dir:
+        # prompt user with transcode_dir prefilled, only have to hit Enter
+        # if ok but is able to edit if necessary
+        print '\nPress Enter to validate following transcode directory name (after edition if necessary):'
+        readline.set_startup_hook(lambda: readline.insert_text(transcode_dir))
+        try:
+            transcode_dir = raw_input()
+        finally:
+            readline.set_startup_hook()
     if not os.path.exists(transcode_dir):
         os.makedirs(transcode_dir)
     else:

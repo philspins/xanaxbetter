@@ -63,6 +63,7 @@ def main():
             default=os.path.expanduser('~/.xanaxbetter/cache'))
     parser.add_argument('-U', '--no-upload', action='store_true', help='don\'t upload new torrents (in case you want to do it manually)')
     parser.add_argument('-E', '--no-24bit-edit', action='store_true', help='don\'t try to edit 24-bit torrents mistakenly labeled as 16-bit')
+    parser.add_argument('-C', '--check-dir', action='store_true', help='check/verify (eventually edit) transcode directory name before creation')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
 
     args = parser.parse_args()
@@ -114,6 +115,7 @@ def main():
             supported_media = xanaxapi.lossless_media
 
     upload_torrent = not args.no_upload
+    check_dir = args.check_dir
 
     print 'Logging in to %s...' % __site_url__
     api = xanaxapi.XanaxAPI(username, password)
@@ -211,7 +213,7 @@ def main():
                 print 'Adding format %s...' % format,
                 tmpdir = tempfile.mkdtemp()
                 try:
-                    transcode_dir = transcode.transcode_release(flac_dir, output_dir, format, max_threads=args.threads)
+                    transcode_dir = transcode.transcode_release(flac_dir, output_dir, format, check_dir, max_threads=args.threads)
                     new_torrent = transcode.make_torrent(transcode_dir, tmpdir, api.tracker, api.passkey)
                     if upload_torrent:
                         permalink = api.permalink(torrent)
