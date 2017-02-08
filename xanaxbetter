@@ -7,6 +7,7 @@ import shutil
 import sys
 import tempfile
 import urlparse
+from subprocess import check_output
 from multiprocessing import cpu_count
 
 import tagging
@@ -52,6 +53,15 @@ def formats_needed(group, torrent, supported_formats):
     return [format for format in missing_formats if format in allowed_formats]
 
 def main():
+    # check for prerequisites
+    reqs = ['sox', 'flac', 'lame', 'mktorrent']
+    for req in reqs:
+        try:
+            check_output(['which', req])
+        except:
+            print 'You are missing %s, which is required for xanaxbetter to run. Please install it.' % req
+            return
+
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter, prog='xanaxbetter')
     parser.add_argument('release_urls', nargs='*', help='the URL where the release is located')
     parser.add_argument('-s', '--single', action='store_true', help='only add one format per release (useful for getting unique groups)')
