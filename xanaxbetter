@@ -74,6 +74,7 @@ def main():
     parser.add_argument('-U', '--no-upload', action='store_true', help='don\'t upload new torrents (in case you want to do it manually)')
     parser.add_argument('-E', '--no-24bit-edit', action='store_true', help='don\'t try to edit 24-bit torrents mistakenly labeled as 16-bit')
     parser.add_argument('-C', '--check-dir', action='store_true', help='check/verify (eventually edit) transcode directory name before creation')
+    parser.add_argument('-u', '--uploads', action='store_true', help='search uploaded torrents instead of snatched')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
 
     args = parser.parse_args()
@@ -142,7 +143,10 @@ def main():
         candidates = [(int(query['id']), int(query['torrentid'])) for query in\
                 [dict(urlparse.parse_qsl(urlparse.urlparse(url).query)) for url in args.release_urls]]
     else:
-        candidates = api.snatched(skip=seen, media=supported_media)
+		if args.uploads:
+			candidates = api.uploaded(skip=seen, media=supported_media)
+		else:
+			candidates = api.snatched(skip=seen, media=supported_media)
 
     for groupid, torrentid in candidates:
         group = api.request('torrentgroup', id=groupid)
